@@ -36,7 +36,7 @@ The project is a bilingual English/Arabic RAG chatbot for Syrian Private Univers
 - Qdrant client versions differ across services (`1.7.3` in RAG service, `1.10.1` in Embedding Store), while the Qdrant server image is `v1.10.1`.
 - The pipeline is not idempotent: every ingest creates random UUIDs, so rerunning the pipeline can duplicate chunks instead of updating by source/hash.
 - Frontend demo fallbacks can turn real backend failures into fake success.
-- No `eval_dataset.json` is present, so the evaluation script cannot run.
+- A source-independent smoke `eval_dataset.json` is present, but the 120-item source-backed gold dataset still requires approved admissions documents.
 - No CI, test suite, dependency audit, budget tracking, or production deployment profile is present.
 
 ## 2. Success Definition
@@ -166,6 +166,7 @@ Start these first. Do not spend serious time on model swaps before these are don
   - `evaluate_system.py`
   - new `evaluation/README.md`
 - Problem: There is an evaluation script, but no dataset in this checkout.
+- Current status: A smoke dataset and production-grade evaluation runner exist. The full 120-item source-backed dataset remains pending official reviewed source documents.
 - Tasks:
   - Create at least 120 questions: 60 Arabic, 60 English.
   - Cover faculties, fees, admission requirements, curriculum, regulations, contact info, missing information, follow-up questions, and adversarial prompts.

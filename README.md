@@ -78,7 +78,21 @@ Run the frontend build from `Services/spu-ai-connect-main`:
 npm run build
 ```
 
+Validate the evaluation dataset:
+
+```bash
+python evaluate_system.py --validate-only
+```
+
+Run the smoke evaluation after the backend is running:
+
+```bash
+python evaluate_system.py --judge-mode rules --fail-on-threshold
+```
+
 ## Architecture Decisions
 
 - Full RAG system design: [docs/RAG_SYSTEM_DESIGN.md](docs/RAG_SYSTEM_DESIGN.md)
 - Cache strategy: [docs/cache-strategy.md](docs/cache-strategy.md)
+- Evaluation docs: [docs/evaluation.md](docs/evaluation.md)
+- Evaluation workflow: [evaluation/README.md](evaluation/README.md)

@@ -117,3 +117,6 @@ Seminar*.pdf
 *.pdf
 draft.md
 evaluation_report.md
+evaluation_report*.json
+evaluation_report*.md
+evaluation/reports/

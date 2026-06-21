@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "name": "SPU admissions source-backed gold evaluation",
+  "dataset_type": "gold_template",
+  "description": "Copy this file to eval_dataset.gold.json after approved source documents are available. Do not fill ground-truth answers from memory or model output.",
+  "items": [
+    {
+      "id": "gold-en-001",
+      "question": "Replace with an English admissions question from an approved source.",
+      "language": "en",
+      "category": "admission",
+      "ground_truth_answer": "Replace with a human-reviewed answer copied or summarized from approved source documents.",
+      "expected_behavior": "answer",
+      "must_cite_sources": true,
+      "expected_doc_category": "admission",
+      "expected_faculty": null,
+      "minimum_sources": 1,
+      "tags": ["gold", "source_backed"]
+    },
+    {
+      "id": "gold-ar-001",
+      "question": "استبدل هذا السؤال بسؤال قبول عربي من مصدر معتمد.",
+      "language": "ar",
+      "category": "admission",
+      "ground_truth_answer": "استبدل هذا النص بإجابة راجعها إنسان اعتمادا على وثائق رسمية معتمدة.",
+      "expected_behavior": "answer",
+      "must_cite_sources": true,
+      "expected_doc_category": "admission",
+      "expected_faculty": null,
+      "minimum_sources": 1,
+      "tags": ["gold", "source_backed"]
+    }
+  ]
+}
