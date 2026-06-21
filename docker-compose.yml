@@ -1,0 +1,174 @@
+services:
+  data-loader:
+    build: ./Services/Data_Loader
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./Data:/app/data
+    container_name: data-loading-service
+    environment:
+      - PYTHONUNBUFFERED=1
+      - CORS_ALLOW_ORIGINS=${CORS_ALLOW_ORIGINS:-http://localhost:5173,http://127.0.0.1:5173}
+      - ADMIN_PASSWORD_HASH=${ADMIN_PASSWORD_HASH}
+      - ADMIN_TOKEN_SECRET=${ADMIN_TOKEN_SECRET}
+      - ADMIN_TOKEN_TTL_SECONDS=${ADMIN_TOKEN_TTL_SECONDS:-3600}
+      - SPLITTING_SERVICE_URL=http://data-splitting:5002
+      - EMBEDDING_STORE_URL=http://embedding-store:5003
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:5001/health').read()\""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+  data-splitting:
+    build: ./Services/Data_Splitting
+    ports:
+      - "5002:5002"
+    container_name: data-splitting-service
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:5002/health').read()\""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+  embedding-store:
+    build: ./Services/Embedding_Store
+    ports:
+      - "5003:5003"
+    container_name: embedding-store-service
+    depends_on:
+      qdrant:
+        condition: service_healthy
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ADMIN_TOKEN_SECRET=${ADMIN_TOKEN_SECRET}
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
+      - QDRANT_COLLECTION_NAME=${QDRANT_COLLECTION_NAME:-arabic_university_docs}
+      - QUERY_EMBEDDING_CACHE_ENABLED=${QUERY_EMBEDDING_CACHE_ENABLED:-true}
+      - QUERY_EMBEDDING_CACHE_TTL_SECONDS=${QUERY_EMBEDDING_CACHE_TTL_SECONDS:-3600}
+      - QUERY_EMBEDDING_CACHE_MAX_ENTRIES=${QUERY_EMBEDDING_CACHE_MAX_ENTRIES:-4096}
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:5003/health').read()\""]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 120s
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+        reservations:
+          memory: 4G
+    networks:
+      - app-network
+
+  rag-service:
+    build: ./Services/RAG_Service
+    ports:
+      - "5004:5004"
+    container_name: rag-service
+    depends_on:
+      qdrant:
+        condition: service_healthy
+      embedding-store:
+        condition: service_healthy
+    environment:
+      - PYTHONUNBUFFERED=1
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
+      - QDRANT_COLLECTION_NAME=${QDRANT_COLLECTION_NAME:-arabic_university_docs}
+      - EMBEDDING_STORE_URL=http://embedding-store:5003
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:5004/health').read()\""]
+      interval: 10s
+      timeout: 5s
+      retries: 8
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+        reservations:
+          memory: 2G
+    networks:
+      - app-network
+
+  qa-chatting:
+    build: ./Services/QA_Chatting
+    ports:
+      - "5005:5005"
+    container_name: qa-chatting-service
+    depends_on:
+      rag-service:
+        condition: service_healthy
+    environment:
+      - PYTHONUNBUFFERED=1
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4.1-mini}
+      - RAG_SERVICE_URL=http://rag-service:5004
+      - CORS_ALLOW_ORIGINS=${CORS_ALLOW_ORIGINS:-http://localhost:5173,http://127.0.0.1:5173}
+      - MIN_RELEVANCE_SCORE=${MIN_RELEVANCE_SCORE:-0.3}
+      - MAX_RETRIEVAL_K=${MAX_RETRIEVAL_K:-12}
+      - RATE_LIMIT_PER_MINUTE=${RATE_LIMIT_PER_MINUTE:-30}
+      - PROMPT_VERSION=${PROMPT_VERSION:-admissions-rag-v1}
+      - ANSWER_POLICY_VERSION=${ANSWER_POLICY_VERSION:-admissions-answer-v1}
+      - OPENAI_PROMPT_CACHE_KEY_PREFIX=${OPENAI_PROMPT_CACHE_KEY_PREFIX:-spu-admissions}
+      - OPENAI_PROMPT_CACHE_RETENTION=${OPENAI_PROMPT_CACHE_RETENTION:-}
+      - CACHE_ENABLED=${CACHE_ENABLED:-true}
+      - CACHE_BACKEND=${CACHE_BACKEND:-memory}
+      - CACHE_NAMESPACE=${CACHE_NAMESPACE:-spu-admissions}
+      - CACHE_MAX_ENTRIES=${CACHE_MAX_ENTRIES:-2048}
+      - RETRIEVAL_CACHE_TTL_SECONDS=${RETRIEVAL_CACHE_TTL_SECONDS:-1800}
+      - RETRIEVAL_EMPTY_CACHE_TTL_SECONDS=${RETRIEVAL_EMPTY_CACHE_TTL_SECONDS:-60}
+      - ANSWER_CACHE_ENABLED=${ANSWER_CACHE_ENABLED:-true}
+      - ANSWER_CACHE_TTL_SECONDS=${ANSWER_CACHE_TTL_SECONDS:-21600}
+      - ANSWER_CACHE_MIN_CONFIDENCE=${ANSWER_CACHE_MIN_CONFIDENCE:-0.45}
+      - COLLECTION_VERSION_TTL_SECONDS=${COLLECTION_VERSION_TTL_SECONDS:-15}
+      - MODEL_INPUT_PRICE_PER_1M=${MODEL_INPUT_PRICE_PER_1M:-0}
+      - MODEL_CACHED_INPUT_PRICE_PER_1M=${MODEL_CACHED_INPUT_PRICE_PER_1M:-0}
+      - MODEL_OUTPUT_PRICE_PER_1M=${MODEL_OUTPUT_PRICE_PER_1M:-0}
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:5005/health').read()\""]
+      interval: 10s
+      timeout: 5s
+      retries: 8
+    deploy:
+      resources:
+        limits:
+          memory: 12G
+        reservations:
+          memory: 8G
+    networks:
+      - app-network
+
+  qdrant:
+    image: qdrant/qdrant:v1.10.1
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    container_name: qdrant-service
+    volumes:
+      - qdrant_storage:/qdrant/storage
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:6333/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    networks:
+      - app-network
+
+  # Remove the auto-pipeline service
+  # We'll run it manually once
+
+
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  qdrant_storage:

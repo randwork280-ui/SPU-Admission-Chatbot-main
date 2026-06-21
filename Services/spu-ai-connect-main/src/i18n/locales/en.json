@@ -1,0 +1,102 @@
+{
+  "common": {
+    "spu": "Syrian Private University",
+    "motto": "Building a Nation Worthy of Our Dreams"
+  },
+  "nav": {
+    "chat": "Chat",
+    "admin": "Admin"
+  },
+  "header": {
+    "toggleTheme": "Toggle theme",
+    "toggleLanguage": "Toggle language"
+  },
+  "chat": {
+    "title": "University AI Assistant",
+    "placeholder": "Ask me about the university...",
+    "send": "Send",
+    "welcome": "Welcome to SPU's Intelligent Assistant",
+    "subtitle": "Ask me about faculties, fees, admission requirements, and more",
+    "you": "You",
+    "copy": "Copy",
+    "copied": "Copied",
+    "clearChat": "Clear chat",
+    "thinking": "Thinking...",
+    "errorMessage": "Sorry, an error occurred. Please try again.",
+    "quickActions": {
+      "faculties": "Faculty Information",
+      "fees": "Tuition Fees",
+      "admission": "Admission Requirements",
+      "programs": "Programs & Majors",
+      "contact": "Contact Information",
+      "rules": "Rules & Regulations"
+    }
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "dashboard": "Dashboard",
+    "settings": "Settings",
+    "auth": {
+      "title": "Admin Access",
+      "subtitle": "Enter password to continue",
+      "password": "Password",
+      "submit": "Login",
+      "error": "Incorrect password",
+      "logout": "Logout"
+    },
+    "pipeline": {
+      "title": "Update Knowledge Base",
+      "description": "Run the auto-pipeline process to load documents, generate embeddings, and store them in the vector database",
+      "runButton": "Run Auto-Pipeline",
+      "status": {
+        "ready": "Ready",
+        "running": "Updating...",
+        "success": "Completed Successfully",
+        "failed": "Failed"
+      },
+      "stages": {
+        "loading": "Loading Documents",
+        "splitting": "Splitting Content",
+        "embedding": "Generating Embeddings",
+        "storing": "Storing in Database"
+      }
+    },
+    "stats": {
+      "title": "System Statistics",
+      "totalDocuments": "Total Documents Loaded",
+      "totalChunks": "Total Chunks Created",
+      "vectorDbDocs": "Documents in Vector DB",
+      "lastUpdate": "Last Update",
+      "avgChunkSize": "Average Chunk Size",
+      "chars": "chars",
+      "autoRefresh": "Auto-refresh",
+      "refresh": "Refresh"
+    },
+    "logs": {
+      "title": "Operation Logs",
+      "clear": "Clear Logs",
+      "empty": "No logs available"
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "scanData": "Scan Data Folder",
+      "retrievalStats": "Retrieval Stats",
+      "testQuery": "Test Query",
+      "clearCache": "Clear Cache"
+    },
+    "modals": {
+      "scanData": {
+        "title": "Data Files",
+        "totalFiles": "Total Files",
+        "noFiles": "No files found"
+      },
+      "testQuery": {
+        "title": "Test Query",
+        "placeholder": "Type your question here...",
+        "test": "Test",
+        "response": "Response"
+      },
+      "close": "Close"
+    }
+  }
+}

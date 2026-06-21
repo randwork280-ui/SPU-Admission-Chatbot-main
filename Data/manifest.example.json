@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "documents": [
+    {
+      "source": "admission-requirements-2026.md",
+      "language": "mixed",
+      "faculty": null,
+      "doc_category": "admission",
+      "version": "2026.1",
+      "official_date": "2026-06-01",
+      "checksum": "replace-with-sha256",
+      "visibility": "public"
+    }
+  ]
+}

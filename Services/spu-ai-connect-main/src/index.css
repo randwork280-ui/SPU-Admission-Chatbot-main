@@ -1,0 +1,179 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* SPU Color Scheme - Light Mode */
+    --background: 0 0% 100%;
+    --foreground: 220 13% 18%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 13% 18%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 13% 18%;
+
+    /* Primary: Navy Blue #15245b */
+    --primary: 227 61% 22%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary: Red #c71c2c */
+    --secondary: 355 76% 45%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+
+    --accent: 227 61% 95%;
+    --accent-foreground: 227 61% 22%;
+
+    --destructive: 355 76% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 227 61% 22%;
+
+    --radius: 0.75rem;
+
+    /* Sidebar */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 220 13% 18%;
+    --sidebar-primary: 227 61% 22%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 227 61% 95%;
+    --sidebar-accent-foreground: 227 61% 22%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 227 61% 22%;
+
+    /* Custom SPU variables */
+    --spu-navy: 227 61% 22%;
+    --spu-red: 355 76% 45%;
+    --spu-navy-dark: 227 61% 15%;
+    --gradient-overlay: linear-gradient(135deg, hsl(227 61% 22% / 0.05), hsl(227 61% 15% / 0.1));
+  }
+
+  .dark {
+    /* Dark Mode: #1a1a1a background */
+    --background: 0 0% 10%;
+    --foreground: 220 14% 96%;
+
+    --card: 0 0% 12%;
+    --card-foreground: 220 14% 96%;
+
+    --popover: 0 0% 12%;
+    --popover-foreground: 220 14% 96%;
+
+    /* Primary stays navy but lighter for visibility */
+    --primary: 227 61% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary: Red */
+    --secondary: 355 76% 55%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 0 0% 15%;
+    --muted-foreground: 220 9% 65%;
+
+    --accent: 227 40% 20%;
+    --accent-foreground: 220 14% 96%;
+
+    --destructive: 355 76% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 227 61% 50%;
+
+    /* Sidebar dark */
+    --sidebar-background: 0 0% 8%;
+    --sidebar-foreground: 220 14% 96%;
+    --sidebar-primary: 227 61% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 227 40% 20%;
+    --sidebar-accent-foreground: 220 14% 96%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 227 61% 50%;
+
+    /* Custom SPU variables dark */
+    --spu-navy: 227 61% 50%;
+    --spu-red: 355 76% 55%;
+    --spu-navy-dark: 227 61% 40%;
+    --gradient-overlay: linear-gradient(135deg, hsl(227 61% 30% / 0.1), hsl(227 61% 20% / 0.15));
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Cairo', 'Inter', sans-serif;
+  }
+
+  /* RTL Support */
+  [dir="rtl"] {
+    font-family: 'Cairo', sans-serif;
+  }
+
+  [dir="ltr"] {
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer utilities {
+  .animate-shake {
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+  }
+  
+  @keyframes shake {
+    10%, 90% { transform: translateX(-1px); }
+    20%, 80% { transform: translateX(2px); }
+    30%, 50%, 70% { transform: translateX(-4px); }
+    40%, 60% { transform: translateX(4px); }
+  }
+  /* Smooth transitions for theme switching */
+  .theme-transition {
+    @apply transition-colors duration-300 ease-in-out;
+  }
+
+  /* Glassmorphism effect */
+  .glass {
+    @apply bg-background/80 backdrop-blur-md border border-border/50;
+  }
+
+  .glass-card {
+    @apply bg-card/90 backdrop-blur-sm border border-border/30 shadow-lg;
+  }
+
+  /* Futuristic gradient overlay */
+  .gradient-overlay {
+    background: var(--gradient-overlay);
+  }
+
+  /* Soft shadows */
+  .shadow-soft {
+    box-shadow: 0 4px 20px -4px hsl(var(--foreground) / 0.1);
+  }
+
+  .shadow-glow {
+    box-shadow: 0 0 30px -5px hsl(var(--primary) / 0.3);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-muted rounded-full;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground/30 rounded-full hover:bg-muted-foreground/50 transition-colors;
+}
