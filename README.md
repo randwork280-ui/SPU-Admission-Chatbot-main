@@ -72,6 +72,12 @@ Run the encoding guard before committing Arabic or documentation changes:
 python scripts/check_encoding.py
 ```
 
+Run the local quality gate:
+
+```bash
+python scripts/quality_check.py
+```
+
 Run the frontend build from `Services/spu-ai-connect-main`:
 
 ```bash
@@ -96,3 +102,4 @@ python evaluate_system.py --judge-mode rules --fail-on-threshold
 - Cache strategy: [docs/cache-strategy.md](docs/cache-strategy.md)
 - Evaluation docs: [docs/evaluation.md](docs/evaluation.md)
 - Evaluation workflow: [evaluation/README.md](evaluation/README.md)
+- Quality gates: [docs/quality-gates.md](docs/quality-gates.md)

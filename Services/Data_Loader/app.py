@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import hashlib
 import json
 import logging
 import os
@@ -21,6 +20,7 @@ from admin_security import (
     require_admin,
     verify_password,
 )
+from metadata_utils import load_manifest_entries_from_path, sha256_file, source_id
 from text_utils import normalize_arabic_text
 
 
@@ -68,40 +68,21 @@ def _utc_now() -> str:
 
 
 def _sha256_file(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as file_obj:
-        for block in iter(lambda: file_obj.read(1024 * 1024), b""):
-            digest.update(block)
-    return digest.hexdigest()
+    return sha256_file(path)
 
 
 def _source_id(source: str, version: str) -> str:
-    raw = f"{source}:{version}".encode("utf-8")
-    return hashlib.sha256(raw).hexdigest()[:24]
+    return source_id(source, version)
 
 
 def load_manifest_entries() -> Dict[str, Dict[str, Any]]:
-    if not MANIFEST_PATH.exists():
-        return {}
-
     try:
-        manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
+        return load_manifest_entries_from_path(MANIFEST_PATH)
+    except (json.JSONDecodeError, ValueError) as exc:
         raise HTTPException(
             status_code=500,
             detail=f"Invalid Data manifest JSON: {exc}",
         ) from exc
-
-    documents = manifest.get("documents", [])
-    if not isinstance(documents, list):
-        raise HTTPException(status_code=500, detail="Data manifest documents must be a list")
-
-    entries: Dict[str, Dict[str, Any]] = {}
-    for item in documents:
-        if not isinstance(item, dict) or not item.get("source"):
-            continue
-        entries[str(item["source"])] = item
-    return entries
 
 
 def extract_metadata_from_filename(filename: str) -> Dict[str, str]:

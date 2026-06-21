@@ -569,6 +569,7 @@ Start these first. Do not spend serious time on model swaps before these are don
 - Start: 2026-07-03
 - Finish target: 2026-07-08
 - Files: `.github/workflows/*` or local CI config
+- Current status: A lightweight local quality gate, unit tests, and GitHub Actions workflow exist. Docker build tests, API contract tests, dependency audit, and smoke RAG eval against live services remain pending.
 - Tasks:
   - Python formatting and linting.
   - TypeScript lint/build.
